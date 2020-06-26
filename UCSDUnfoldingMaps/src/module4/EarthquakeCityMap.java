@@ -13,6 +13,7 @@ import de.fhpotsdam.unfolding.marker.Marker;
 import de.fhpotsdam.unfolding.marker.MultiMarker;
 import de.fhpotsdam.unfolding.providers.Google;
 import de.fhpotsdam.unfolding.providers.MBTilesMapProvider;
+import de.fhpotsdam.unfolding.providers.Microsoft;
 import de.fhpotsdam.unfolding.utils.MapUtils;
 import parsing.ParseFeed;
 import processing.core.PApplet;
@@ -65,10 +66,11 @@ public class EarthquakeCityMap extends PApplet {
 		size(900, 700, OPENGL);
 		if (offline) {
 		    map = new UnfoldingMap(this, 200, 50, 650, 600, new MBTilesMapProvider(mbTilesString));
-		    earthquakesURL = "2.5_week.atom";  // The same feed, but saved August 7, 2015
+		    //earthquakesURL = "2.5_week.atom";  // The same feed, but saved August 7, 2015
 		}
 		else {
 			map = new UnfoldingMap(this, 200, 50, 650, 600, new Google.GoogleMapProvider());
+			map = new UnfoldingMap(this, 200, 50, 650, 600, new Microsoft.RoadProvider());
 			// IF YOU WANT TO TEST WITH A LOCAL FILE, uncomment the next line
 		    //earthquakesURL = "2.5_week.atom";
 		}
@@ -80,7 +82,7 @@ public class EarthquakeCityMap extends PApplet {
 		//earthquakesURL = "test2.atom";
 		
 		// WHEN TAKING THIS QUIZ: Uncomment the next line
-		//earthquakesURL = "quiz1.atom";
+		earthquakesURL = "quiz1.atom";
 		
 		
 		// (2) Reading in earthquake data and geometric properties
@@ -140,18 +142,40 @@ public class EarthquakeCityMap extends PApplet {
 		textAlign(LEFT, CENTER);
 		textSize(12);
 		text("Earthquake Key", 50, 75);
+		text("Size = Magnitude", 50, 190);
 		
-		fill(color(255, 0, 0));
-		ellipse(50, 125, 15, 15);
-		fill(color(255, 255, 0));
-		ellipse(50, 175, 10, 10);
-		fill(color(0, 0, 255));
-		ellipse(50, 225, 5, 5);
+		/*
+		 * fill(color(255, 0, 0)); 
+		 * ellipse(50, 125, 15, 15); 
+		 * fill(color(255, 255, 0));
+		 * ellipse(50, 175, 10, 10); 
+		 * fill(color(0, 0, 255)); 
+		 * ellipse(50, 225, 5, 5);
+		 */
+		
+		fill(color(200, 0, 0));
+		triangle(45, 130, 50, 120, 55, 130);
+		fill(color(255));
+		ellipse(50, 150, 12, 12);
+		rect(44, 165, 12, 12);
+		fill(255, 255, 0);
+		ellipse(50, 220, 10, 10);
+		fill(0, 0, 255);
+		ellipse(50, 240, 10, 10);
+		fill(255, 0, 0);
+		ellipse(50, 260, 10, 10);
+
 		
 		fill(0, 0, 0);
-		text("5.0+ Magnitude", 75, 125);
-		text("4.0+ Magnitude", 75, 175);
-		text("Below 4.0", 75, 225);
+		text("City Marker", 65, 125);
+		text("Land Quake", 65, 148);
+		text("Ocean Quake", 65, 170);
+		text("Shallow", 65, 218);
+		text("Intermediate", 65, 238);
+		text("Deep ", 65, 258);
+		//text("5.0+ Magnitude", 75, 125);
+		//text("4.0+ Magnitude", 75, 175);
+		//text("Below 4.0", 75, 225);
 	}
 
 	
@@ -170,7 +194,9 @@ public class EarthquakeCityMap extends PApplet {
 		// If isInCountry ever returns true, isLand should return true.
 		for (Marker m : countryMarkers) {
 			// TODO: Finish this method using the helper method isInCountry
-			
+			if (isInCountry(earthquake, m)) {
+				return true;
+			}
 		}
 		
 		
@@ -211,6 +237,31 @@ public class EarthquakeCityMap extends PApplet {
 		//      property set.  You can get the country with:
 		//        String country = (String)m.getProperty("country");
 		
+		int counterO = 0;  // Total counter for land quakes
+
+		for (Marker m : countryMarkers) {  // loop through all the country markers
+			int counter = 0; // counter for land Quakes
+
+			for (Marker qm : quakeMarkers) {  // nested loop to earthquake markers
+								
+				if (qm instanceof LandQuakeMarker) {  // check if the quake is on land!!
+					if (m.getProperty("name").equals(qm.getProperty("country"))) { // if yes, check if its in the same country
+																				   // as Marker 'm' (first loop)
+						counter += 1; // update the counter for quakes for that country
+						counterO += 1; // update the total counter for land quakes
+					}
+				} 
+				
+				
+			}
+			
+			if (counter > 0) {
+				System.out.println((String)m.getProperty("name") + ": " + counter); // print country and quakes in that country
+			}
+		}
+		
+		// total Ocean quakes = total quakes - total land quakes
+		System.out.println("earthquakes recorded in Ocean are: " + (quakeMarkers.size() - counterO)); 
 		
 	}
 	

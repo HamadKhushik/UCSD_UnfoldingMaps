@@ -46,13 +46,14 @@ public abstract class EarthquakeMarker extends SimplePointMarker
 	// constructor
 	public EarthquakeMarker (PointFeature feature) 
 	{
-		super(feature.getLocation());
+		//super(feature.getLocation());
+		feature.getLocation();
 		// Add a radius property and then set the properties
 		java.util.HashMap<String, Object> properties = feature.getProperties();
 		float magnitude = Float.parseFloat(properties.get("magnitude").toString());
 		properties.put("radius", 2*magnitude );
 		setProperties(properties);
-		this.radius = 1.75f*getMagnitude();
+		this.radius = 1.75f*1.7f*getMagnitude();  // scaling the radius
 	}
 	
 
@@ -67,7 +68,12 @@ public abstract class EarthquakeMarker extends SimplePointMarker
 		// call abstract method implemented in child class to draw marker shape
 		drawEarthquake(pg, x, y);
 		
-		// OPTIONAL TODO: draw X over marker if within past day		
+		// OPTIONAL TODO: draw X over marker if within past day	
+		if (this.getProperty("age").equals("Past Day")) {  // check if the quake occured in last day
+			pg.strokeWeight(2); // make the line Bold
+			pg.line(x - this.radius/2, y - this.radius/2, x + this.radius/2, y + this.radius/2);  // Draw a cross on the marker
+			pg.line(x + this.radius/2, y - this.radius/2, x - this.radius/2, y + this.radius/2);
+		}
 		
 		// reset to previous styling
 		pg.popStyle();
@@ -81,6 +87,15 @@ public abstract class EarthquakeMarker extends SimplePointMarker
 	// You might find the getters below helpful.
 	private void colorDetermine(PGraphics pg) {
 		//TODO: Implement this method
+		
+		if (this.getMagnitude() < 70) {  // check if earthquake is shallow/intermediate/deep!
+			pg.fill(255, 255, 0);
+		} else if (this.getMagnitude() >= 70 && this.getMagnitude() < 300) {
+			pg.fill(0, 0, 255);
+		}else if (this.getMagnitude() >= 300) {
+			pg.fill(255, 0, 0);
+		}
+				
 	}
 	
 	

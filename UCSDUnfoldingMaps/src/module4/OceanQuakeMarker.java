@@ -30,6 +30,8 @@ public class OceanQuakeMarker extends EarthquakeMarker {
 		// and how it is set in the EarthquakeMarker constructor
 		
 		// TODO: Implement this method
+		float adjustment = this.radius/2; // to centre the square at earthquake position
+		pg.rect(x - adjustment, y - adjustment, this.radius, this.radius);  // set markers for the Ocean Quakes in this case a square
 		
 	}
 	
