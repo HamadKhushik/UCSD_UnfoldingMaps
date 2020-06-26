@@ -164,6 +164,10 @@ public class EarthquakeCityMap extends PApplet {
 		ellipse(50, 240, 10, 10);
 		fill(255, 0, 0);
 		ellipse(50, 260, 10, 10);
+		fill(255);
+		ellipse(50, 280, 10, 10);
+		line(45, 275, 55, 285);
+		line(55, 275, 45, 285);
 
 		
 		fill(0, 0, 0);
@@ -173,6 +177,7 @@ public class EarthquakeCityMap extends PApplet {
 		text("Shallow", 65, 218);
 		text("Intermediate", 65, 238);
 		text("Deep ", 65, 258);
+		text("Last Day", 65, 278);
 		//text("5.0+ Magnitude", 75, 125);
 		//text("4.0+ Magnitude", 75, 175);
 		//text("Below 4.0", 75, 225);

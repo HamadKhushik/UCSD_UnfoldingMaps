@@ -11,8 +11,6 @@ tmp/
 *.dat
 *.mbtiles
 *.csv
-*.json
-*.atom
 *.txt
 *.jpg
 *.tmp
